@@ -1,0 +1,6 @@
+pytest==7.4.0        # Core testing framework
+pytest-cov==4.1.0    # Coverage plugin for pytest
+black==23.7.0        # Code formatter
+flake8==6.1.0        # Linting
+mypy==1.6.1          # Static type checker
+httpx

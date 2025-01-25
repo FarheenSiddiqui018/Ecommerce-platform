@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Simple E-Commerce UI</title>
+</head>
+<body>
+  <h1>Simple E-Commerce UI</h1>
+
+  <!-- 1. List Products -->
+  <section>
+    <h2>List Products</h2>
+    <button onclick="loadProducts()">Load Products</button>
+    <ul id="products-list"></ul>
+  </section>
+  <hr/>
+
+  <!-- 2. Create a Product -->
+  <section>
+    <h2>Create Product</h2>
+    <form id="create-product-form">
+      <label>
+        Name:
+        <input type="text" id="product-name" required />
+      </label>
+      <br/>
+      <label>
+        Description:
+        <input type="text" id="product-description" required />
+      </label>
+      <br/>
+      <label>
+        Price:
+        <input type="number" step="any" id="product-price" required />
+      </label>
+      <br/>
+      <label>
+        Stock:
+        <input type="number" id="product-stock" required />
+      </label>
+      <br/>
+      <button type="submit">Create Product</button>
+    </form>
+    <p id="create-product-message"></p>
+  </section>
+  <hr/>
+
+  <!-- 3. Create an Order -->
+  <section>
+    <h2>Create Order</h2>
+    <form id="create-order-form">
+      <label>
+        Product ID:
+        <input type="number" id="order-product-id" required />
+      </label>
+      <br/>
+      <label>
+        Quantity:
+        <input type="number" id="order-quantity" required />
+      </label>
+      <br/>
+      <button type="submit">Create Order</button>
+    </form>
+    <p id="create-order-message"></p>
+  </section>
+
+  <script>
+    // Adjust BASE_URL to point to your FastAPI server
+    const BASE_URL = "http://127.0.0.1:8000";
+
+    // --- 1. List Products ---
+    async function loadProducts() {
+      try {
+        const response = await fetch(`${BASE_URL}/products`);
+        if (!response.ok) {
+          throw new Error("Failed to load products");
+        }
+        const products = await response.json();
+        const listElement = document.getElementById("products-list");
+        listElement.innerHTML = ""; // clear existing items
+
+        products.forEach((product) => {
+          const li = document.createElement("li");
+          li.textContent = `ID: ${product.id}, Name: ${product.name}, Desc: ${product.description}, Price: ${product.price}, Stock: ${product.stock}`;
+          listElement.appendChild(li);
+        });
+      } catch (err) {
+        console.error(err);
+        alert("Error loading products.");
+      }
+    }
+
+    // --- 2. Create a Product ---
+    const createProductForm = document.getElementById("create-product-form");
+    createProductForm.addEventListener("submit", async (event) => {
+      event.preventDefault(); // Prevent page refresh
+
+      const name = document.getElementById("product-name").value;
+      const description = document.getElementById("product-description").value;
+      const price = parseFloat(document.getElementById("product-price").value);
+      const stock = parseInt(document.getElementById("product-stock").value, 10);
+
+      try {
+        const response = await fetch(`${BASE_URL}/products`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, description, price, stock }),
+        });
+
+        if (!response.ok) {
+          // e.g., 400 on invalid data
+          const errorData = await response.json();
+          throw new Error(errorData.detail || "Error creating product");
+        }
+
+        const createdProduct = await response.json();
+        document.getElementById("create-product-message").textContent =
+          `Product created successfully: ${JSON.stringify(createdProduct)}`;
+
+        // Optionally clear the form
+        createProductForm.reset();
+
+        // Optionally refresh the product list
+        loadProducts();
+      } catch (err) {
+        console.error(err);
+        alert(err.message);
+      }
+    });
+
+    // --- 3. Create an Order ---
+    const createOrderForm = document.getElementById("create-order-form");
+    createOrderForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const productId = parseInt(document.getElementById("order-product-id").value, 10);
+      const quantity = parseInt(document.getElementById("order-quantity").value, 10);
+
+      // For multiple items, you'd build an array of { product_id, quantity }.
+      const orderPayload = {
+        products: [
+          {
+            product_id: productId,
+            quantity: quantity,
+          }
+        ],
+      };
+
+      try {
+        const response = await fetch(`${BASE_URL}/orders`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(orderPayload),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || "Error creating order");
+        }
+
+        const createdOrder = await response.json();
+        document.getElementById("create-order-message").textContent =
+          `Order created successfully: ${JSON.stringify(createdOrder)}`;
+
+        createOrderForm.reset();
+      } catch (err) {
+        console.error(err);
+        alert(err.message);
+      }
+    });
+  </script>
+</body>
+</html>
