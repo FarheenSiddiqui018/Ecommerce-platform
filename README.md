@@ -163,7 +163,7 @@ alembic downgrade -1
     - The test suite uses an **in-memory SQLite DB** by default, so it won’t affect your local or production PostgreSQL DB.
 
 ### 2. Using Docker
-
+    
     ```bash
     docker-compose run --rm test
     ```
