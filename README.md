@@ -167,3 +167,11 @@ alembic downgrade -1
    ```bash
     docker-compose run --rm test
    ```
+
+## Further Improvements
+- Create User Models and Schemas
+- Implement Password Hashing
+- Set Up JWT Token Handling
+- Create Authentication Routes (Register & Login)
+- Protect Existing Routes with Authentication
+- Update UI to Handle Authentication
