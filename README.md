@@ -9,11 +9,16 @@ A minimal FastAPI-based e-commerce application using **SQLModel** and **PostgreS
 
 ## Getting Started
 
-1. **Clone** the repository:
+**Clone** the repository:
    ```bash
    git clone https://github.com/FarheenSiddiqui018/Ecommerce-platform.git
    cd Ecommerce-platform
    ```
+---
+
+### Using Virtual Environment (Manual Setup)
+
+1. **Start PostgreSQL** (if you’re using Postgres locally) or ensure your `.env` points to the correct DB.
 
 2. **Create and activate a virtual environment** (recommended):
 
@@ -37,8 +42,7 @@ A minimal FastAPI-based e-commerce application using **SQLModel** and **PostgreS
    ```bash
    pip install -r dev-requirements.txt
    ```
-
-4. **(Optional) Configure environment**:
+4. **Configure environment**:
 
    - Copy the sample `.env` (if provided) or create a new one:
      ```bash
@@ -46,30 +50,20 @@ A minimal FastAPI-based e-commerce application using **SQLModel** and **PostgreS
      ```
      Update the environment variables inside if you are using PostgreSQL or any other environment-specific config.  
 
----
-
-## Running the Application
-
-### 1. Using Virtual Environment (Manual Setup)
-
-1. **Start PostgreSQL** (if you’re using Postgres locally) or ensure your `.env` points to the correct DB.
-
-2. **Run the FastAPI app** with **Uvicorn**:
+5. **Run the FastAPI app** with **Uvicorn**:
     ```bash
     uvicorn app.main:app --reload
     ```
     - By default, this starts the server at [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
-3. **Check the interactive API docs** at:
+6. **Check the interactive API docs** at:
     - [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs) (Swagger UI)
     - [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc) (ReDoc UI)
 
-4. **Static Front-End**:
+7. **Static Front-End**:
     - Access the sample UI at [http://127.0.0.1:8000/static/index.html](http://127.0.0.1:8000/static/index.html)
 
-### 2. Using Docker
-
-#### Step-by-Step
+### Using Docker
 
 1. **Ensure Docker and Docker Compose are installed**:
     - [Docker Installation Guide](https://docs.docker.com/get-docker/)
@@ -78,7 +72,7 @@ A minimal FastAPI-based e-commerce application using **SQLModel** and **PostgreS
 2. **Create and configure your `.env` file**:
     - If you haven't already, copy `.env.template` to `.env`:
       ```bash
-      cp .env.template .env
+      cp .env.example .env
       ```
     - **Update** `.env` with your PostgreSQL credentials. Ensure that `POSTGRES_HOST` is set to `db` when using Docker Compose.
 
@@ -170,13 +164,6 @@ alembic downgrade -1
 
 ### 2. Using Docker
 
-1. **Ensure Docker containers are running**:
-    ```bash
-    docker-compose up --build
-    ```
-    - Alternatively, you can run tests within the Docker container.
-
-2. **Run Tests inside Docker**:
     ```bash
     docker-compose run --rm test
     ```

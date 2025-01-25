@@ -1,92 +1,219 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Simple E-Commerce UI</title>
+  <meta charset="UTF-8">
+  <title>Enhanced E-Commerce UI</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Optional: Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      padding-top: 70px;
+    }
+    .spinner-border {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+    .section-header {
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Simple E-Commerce UI</h1>
 
-  <!-- 1. List Products -->
-  <section>
-    <h2>List Products</h2>
-    <button onclick="loadProducts()">Load Products</button>
-    <ul id="products-list"></ul>
-  </section>
-  <hr/>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">E-Shop</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#list-products">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#create-product">Add Product</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#create-order">Create Order</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-  <!-- 2. Create a Product -->
-  <section>
-    <h2>Create Product</h2>
-    <form id="create-product-form">
-      <label>
-        Name:
-        <input type="text" id="product-name" required />
-      </label>
-      <br/>
-      <label>
-        Description:
-        <input type="text" id="product-description" required />
-      </label>
-      <br/>
-      <label>
-        Price:
-        <input type="number" step="any" id="product-price" required />
-      </label>
-      <br/>
-      <label>
-        Stock:
-        <input type="number" id="product-stock" required />
-      </label>
-      <br/>
-      <button type="submit">Create Product</button>
-    </form>
-    <p id="create-product-message"></p>
-  </section>
-  <hr/>
+  <!-- Main Container -->
+  <div class="container">
 
-  <!-- 3. Create an Order -->
-  <section>
-    <h2>Create Order</h2>
-    <form id="create-order-form">
-      <label>
-        Product ID:
-        <input type="number" id="order-product-id" required />
-      </label>
-      <br/>
-      <label>
-        Quantity:
-        <input type="number" id="order-quantity" required />
-      </label>
-      <br/>
-      <button type="submit">Create Order</button>
-    </form>
-    <p id="create-order-message"></p>
-  </section>
+    <!-- Alert Messages -->
+    <div id="alert-container"></div>
+
+    <!-- 1. List Products -->
+    <section id="list-products" class="mb-5">
+      <div class="d-flex justify-content-between align-items-center section-header">
+        <h2>Products</h2>
+        <button class="btn btn-primary" onclick="loadProducts()">
+          <span id="load-products-btn-text">Load Products</span>
+          <span id="load-products-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+        </button>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-striped" id="products-table">
+          <thead class="table-dark">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Price ($)</th>
+              <th>Stock</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Products will be dynamically inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr>
+
+    <!-- 2. Create a Product -->
+    <section id="create-product" class="mb-5">
+      <h2>Add New Product</h2>
+      <form id="create-product-form" novalidate>
+        <div class="mb-3">
+          <label for="product-name" class="form-label">Name</label>
+          <input type="text" class="form-control" id="product-name" required>
+          <div class="invalid-feedback">
+            Please enter the product name.
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="product-description" class="form-label">Description</label>
+          <textarea class="form-control" id="product-description" rows="3" required></textarea>
+          <div class="invalid-feedback">
+            Please enter the product description.
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="product-price" class="form-label">Price ($)</label>
+          <input type="number" step="0.01" class="form-control" id="product-price" required>
+          <div class="invalid-feedback">
+            Please enter a valid price.
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="product-stock" class="form-label">Stock</label>
+          <input type="number" class="form-control" id="product-stock" required>
+          <div class="invalid-feedback">
+            Please enter the stock quantity.
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success">Create Product</button>
+        <span id="create-product-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+      </form>
+    </section>
+
+    <hr>
+
+    <!-- 3. Create an Order -->
+    <section id="create-order" class="mb-5">
+      <h2>Create Order</h2>
+      <form id="create-order-form" novalidate>
+        <div class="mb-3">
+          <label for="order-product-id" class="form-label">Product ID</label>
+          <input type="number" class="form-control" id="order-product-id" required>
+          <div class="invalid-feedback">
+            Please enter a valid product ID.
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="order-quantity" class="form-label">Quantity</label>
+          <input type="number" class="form-control" id="order-quantity" required>
+          <div class="invalid-feedback">
+            Please enter the quantity.
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Order</button>
+        <span id="create-order-spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+      </form>
+    </section>
+
+  </div>
+
+  <!-- Bootstrap JS and dependencies (Popper.js) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Optional: SweetAlert for nicer alerts -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script>
-    // Adjust BASE_URL to point to your FastAPI server
+    // Base URL for the FastAPI server
     const BASE_URL = "http://127.0.0.1:8000";
+
+    /**
+     * Utility function to show alerts using SweetAlert
+     * @param {string} type - 'success', 'error', 'warning', etc.
+     * @param {string} message - The message to display
+     */
+    function showAlert(type, message) {
+      Swal.fire({
+        icon: type,
+        title: type.charAt(0).toUpperCase() + type.slice(1),
+        text: message,
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+    }
 
     // --- 1. List Products ---
     async function loadProducts() {
+      const loadBtnText = document.getElementById("load-products-btn-text");
+      const loadSpinner = document.getElementById("load-products-spinner");
+      loadSpinner.classList.remove("d-none");
+      loadBtnText.textContent = "Loading...";
+
       try {
         const response = await fetch(`${BASE_URL}/products`);
         if (!response.ok) {
           throw new Error("Failed to load products");
         }
         const products = await response.json();
-        const listElement = document.getElementById("products-list");
-        listElement.innerHTML = ""; // clear existing items
+        const tableBody = document.querySelector("#products-table tbody");
+        tableBody.innerHTML = ""; // Clear existing products
 
-        products.forEach((product) => {
-          const li = document.createElement("li");
-          li.textContent = `ID: ${product.id}, Name: ${product.name}, Desc: ${product.description}, Price: ${product.price}, Stock: ${product.stock}`;
-          listElement.appendChild(li);
-        });
+        if (products.length === 0) {
+          const tr = document.createElement("tr");
+          const td = document.createElement("td");
+          td.colSpan = 5;
+          td.classList.add("text-center");
+          td.textContent = "No products available.";
+          tr.appendChild(td);
+          tableBody.appendChild(tr);
+        } else {
+          products.forEach((product) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${product.id}</td>
+              <td>${product.name}</td>
+              <td>${product.description}</td>
+              <td>${product.price.toFixed(2)}</td>
+              <td>${product.stock}</td>
+            `;
+            tableBody.appendChild(tr);
+          });
+        }
       } catch (err) {
         console.error(err);
-        alert("Error loading products.");
+        showAlert('error', 'Error loading products.');
+      } finally {
+        loadSpinner.classList.add("d-none");
+        loadBtnText.textContent = "Load Products";
       }
     }
 
@@ -95,10 +222,20 @@
     createProductForm.addEventListener("submit", async (event) => {
       event.preventDefault(); // Prevent page refresh
 
-      const name = document.getElementById("product-name").value;
-      const description = document.getElementById("product-description").value;
+      // Form validation
+      if (!createProductForm.checkValidity()) {
+        event.stopPropagation();
+        createProductForm.classList.add('was-validated');
+        return;
+      }
+
+      const name = document.getElementById("product-name").value.trim();
+      const description = document.getElementById("product-description").value.trim();
       const price = parseFloat(document.getElementById("product-price").value);
       const stock = parseInt(document.getElementById("product-stock").value, 10);
+
+      const createSpinner = document.getElementById("create-product-spinner");
+      createSpinner.classList.remove("d-none");
 
       try {
         const response = await fetch(`${BASE_URL}/products`, {
@@ -110,23 +247,24 @@
         });
 
         if (!response.ok) {
-          // e.g., 400 on invalid data
           const errorData = await response.json();
           throw new Error(errorData.detail || "Error creating product");
         }
 
         const createdProduct = await response.json();
-        document.getElementById("create-product-message").textContent =
-          `Product created successfully: ${JSON.stringify(createdProduct)}`;
+        showAlert('success', `Product "${createdProduct.name}" created successfully!`);
 
-        // Optionally clear the form
+        // Reset the form
         createProductForm.reset();
+        createProductForm.classList.remove('was-validated');
 
-        // Optionally refresh the product list
+        // Refresh the product list
         loadProducts();
       } catch (err) {
         console.error(err);
-        alert(err.message);
+        showAlert('error', err.message);
+      } finally {
+        createSpinner.classList.add("d-none");
       }
     });
 
@@ -135,10 +273,16 @@
     createOrderForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
+      // Form validation
+      if (!createOrderForm.checkValidity()) {
+        event.stopPropagation();
+        createOrderForm.classList.add('was-validated');
+        return;
+      }
+
       const productId = parseInt(document.getElementById("order-product-id").value, 10);
       const quantity = parseInt(document.getElementById("order-quantity").value, 10);
 
-      // For multiple items, you'd build an array of { product_id, quantity }.
       const orderPayload = {
         products: [
           {
@@ -147,6 +291,9 @@
           }
         ],
       };
+
+      const orderSpinner = document.getElementById("create-order-spinner");
+      orderSpinner.classList.remove("d-none");
 
       try {
         const response = await fetch(`${BASE_URL}/orders`, {
@@ -161,15 +308,21 @@
         }
 
         const createdOrder = await response.json();
-        document.getElementById("create-order-message").textContent =
-          `Order created successfully: ${JSON.stringify(createdOrder)}`;
+        showAlert('success', `Order #${createdOrder.id} created successfully!`);
 
         createOrderForm.reset();
+        createOrderForm.classList.remove('was-validated');
+        loadProducts();
       } catch (err) {
         console.error(err);
-        alert(err.message);
+        showAlert('error', err.message);
+      } finally {
+        orderSpinner.classList.add("d-none");
       }
     });
+
+    // Optional: Automatically load products on page load
+    document.addEventListener("DOMContentLoaded", loadProducts);
   </script>
 </body>
 </html>
