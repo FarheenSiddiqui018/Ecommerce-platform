@@ -25,3 +25,6 @@ htmlcov/
 *.tmp
 *.swp
 *~
+
+# Alembic Versions Cache (if any)
+alembic/versions/__pycache__/

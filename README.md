@@ -9,10 +9,10 @@ A minimal FastAPI-based e-commerce application using **SQLModel** and **PostgreS
 
 ## Getting Started
 
-1. **Clone** the repository (replace `YOUR-USERNAME` and `YOUR-REPO` as appropriate):
+1. **Clone** the repository:
    ```bash
-   git clone https://github.com/YOUR-USERNAME/YOUR-REPO.git
-   cd YOUR-REPO
+   git clone https://github.com/FarheenSiddiqui018/Ecommerce-platform.git
+   cd Ecommerce-platform
    ```
 
 2. **Create and activate a virtual environment** (recommended):
@@ -65,7 +65,7 @@ A minimal FastAPI-based e-commerce application using **SQLModel** and **PostgreS
     - [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc) (ReDoc UI)
 
 4. **Static Front-End**:
-    - Access the sample UI at [http://127.0.0.1:8000/static/index.html](http://127.0.0.1:8000/static/index.html) if you’ve mounted `app/static` at `/static`.
+    - Access the sample UI at [http://127.0.0.1:8000/static/index.html](http://127.0.0.1:8000/static/index.html)
 
 ### 2. Using Docker
 
@@ -81,16 +81,6 @@ A minimal FastAPI-based e-commerce application using **SQLModel** and **PostgreS
       cp .env.template .env
       ```
     - **Update** `.env` with your PostgreSQL credentials. Ensure that `POSTGRES_HOST` is set to `db` when using Docker Compose.
-    
-      Example `.env` for Docker:
-      ```env
-      POSTGRES_USER=myuser
-      POSTGRES_PASSWORD=mypassword
-      POSTGRES_DB=ecomm_db
-      POSTGRES_HOST=db
-      POSTGRES_PORT=5432
-      TESTING=0
-      ```
 
 3. **Build and start the Docker containers**:
     ```bash
@@ -116,6 +106,37 @@ A minimal FastAPI-based e-commerce application using **SQLModel** and **PostgreS
       ```bash
       docker-compose down
       ```
+
+---
+
+### Managing Database Migrations with Alembic
+
+Alembic is used to manage database schema changes in this project. Follow these steps to create and apply migrations:
+
+#### 1. **Create a New Migration**
+Generate a migration after modifying your SQLModel models:
+```bash
+alembic revision --autogenerate -m "Migration description"
+```
+
+#### 2. **Apply Migrations**
+Apply the generated migrations to your database:
+```bash
+alembic upgrade head
+```
+
+#### 3. **Rollback Migrations**
+Undo the most recent migration:
+```bash
+alembic downgrade -1
+```
+
+#### 5. **Key Files**
+- **`alembic.ini`**: Configuration file (uses `env:DATABASE_URL`).
+- **`alembic/env.py`**: Configures metadata and database connection.
+
+#### 6. **Common Troubleshooting**
+- **Missing Models in Migration**: Ensure all models are imported in `alembic/env.py`.
 
 ---
 
@@ -156,72 +177,6 @@ A minimal FastAPI-based e-commerce application using **SQLModel** and **PostgreS
     - Alternatively, you can run tests within the Docker container.
 
 2. **Run Tests inside Docker**:
-    - **Option A**: Modify `docker-compose.yml` to include a test service or run commands manually.
-    - **Option B**: Use Docker's `exec` to run tests in the running container.
-
-    **Example using `docker-compose exec`**:
     ```bash
-    docker-compose exec web pytest
+    docker-compose run --rm test
     ```
-
-    - **Note**: Ensure that your Docker container has `pytest` and other test dependencies installed (already covered in `Dockerfile`).
-
-3. **Check Coverage inside Docker**:
-    ```bash
-    docker-compose exec web pytest --cov=app --cov-report=term-missing
-    ```
-
----
-
-
-## Access the Documentation
-
-Swagger UI:
-- Open your web browser and navigate to: http://localhost:8000/docs
-- You should see the interactive Swagger interface where you can explore and test your API endpoints.
-
-ReDoc:
-- Open your web browser and navigate to: http://localhost:8000/redoc
-- ReDoc provides a detailed and user-friendly documentation interface for your API.
-
-## Interacting with the API
-
-### 1. Products
-- **List Products**: `GET /products`  
-- **Create a Product**: `POST /products`  
-  Example body:
-  ```json
-  {
-    "name": "Laptop",
-    "description": "High performance",
-    "price": 1299.99,
-    "stock": 15
-  }
-  ```
-
-### 2. Orders
-- **Create an Order**: `POST /orders`  
-  Example body:
-  ```json
-  {
-    "products": [
-      {
-        "product_id": 1,
-        "quantity": 2
-      },
-      {
-        "product_id": 3,
-        "quantity": 1
-      }
-    ]
-  }
-  ```
-  - Validates stock, calculates total price, and marks order as "completed".
-
----
-
-## Additional Notes
-
-1. **CORS**: If you’re calling the API from a different origin (like a separate React/Vue app), ensure [CORS settings](https://fastapi.tiangolo.com/tutorial/cors/) are configured in `main.py`.
-3. **Environment Variables**: Store secrets (database credentials, etc.) in `.env` or another config method, not in version control.
-4. **Deployment**: For production, consider using a proper WSGI/ASGI server (e.g., **gunicorn** + **uvicorn workers**), Docker, or a hosting platform (e.g., AWS, Heroku).
