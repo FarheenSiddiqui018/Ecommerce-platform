@@ -78,6 +78,10 @@ A minimal FastAPI-based e-commerce application using **SQLModel** and **PostgreS
 
 3. **Build and start the Docker containers**:
     ```bash
+    make build
+    ```
+    or
+    ```bash
     docker-compose up --build
     ```
     - **Flags**:
@@ -92,14 +96,26 @@ A minimal FastAPI-based e-commerce application using **SQLModel** and **PostgreS
     - Static Front-End: [http://localhost:8000/static/index.html](http://localhost:8000/static/index.html)
 
 5. **Stopping the containers**:
-    - If running in detached mode:
+      ```bash
+      make down
+      ```
+      or
       ```bash
       docker-compose down
       ```
-    - If running in the foreground, press `CTRL+C` and then run:
-      ```bash
-      docker-compose down
-      ```
+
+#### Available Makefile Commands
+
+| Command           | Description                                                        |
+|-------------------|--------------------------------------------------------------------|
+| `make build`      | Builds the Docker images as defined in `docker-compose.yml`.       |
+| `make up`         | Starts the Docker containers in detached mode.                     |
+| `make down`       | Stops and removes the Docker containers.                          |
+| `make test`       | Runs the test suite using **pytest** inside the `test` service.    |
+| `make format`     | Formats the codebase using **Black** inside the `web` service.      |
+| `make logs`       | Streams the logs of the running Docker containers.                 |
+| `make migrate`    | Applies database migrations using **Alembic** inside the `web` service. |
+| `make shell`      | Opens a shell inside the `web` service container for debugging.    |
 
 ---
 
@@ -163,7 +179,10 @@ alembic downgrade -1
     - The test suite uses an **in-memory SQLite DB** by default, so it won’t affect your local or production PostgreSQL DB.
 
 ### 2. Using Docker
-    
+   ```bash
+    make test
+   ```
+   or
    ```bash
     docker-compose run --rm test
    ```

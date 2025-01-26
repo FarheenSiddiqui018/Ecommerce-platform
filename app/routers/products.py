@@ -7,6 +7,7 @@ from app.services.product_service import list_products, create_product
 
 router = APIRouter(prefix="/products", tags=["products"])
 
+
 @router.get("", response_model=list[ProductRead])
 def read_products(session: Session = Depends(get_session)):
     """
@@ -14,6 +15,7 @@ def read_products(session: Session = Depends(get_session)):
     """
     print("DEBUG: Using DB:", session.bind.url)
     return list_products(session)
+
 
 @router.post("", response_model=ProductRead, status_code=201)
 def add_product(product_data: ProductCreate, session: Session = Depends(get_session)):

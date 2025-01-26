@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database import init_db
 from app.routers import products, orders
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup logic
@@ -19,6 +20,7 @@ async def lifespan(app: FastAPI):
     # Teardown logic (optional)
     print("DEBUG: No teardown steps currently.")
 
+
 def create_app() -> FastAPI:
     """
     Create and configure the FastAPI application.
@@ -27,7 +29,7 @@ def create_app() -> FastAPI:
         title="Simple E-Commerce Platform",
         version="1.0.0",
         redirect_slashes=False,
-        lifespan=lifespan  # Use the new lifespan approach
+        lifespan=lifespan,  # Use the new lifespan approach
     )
 
     # Mount your static directory
@@ -54,5 +56,6 @@ def create_app() -> FastAPI:
     app.include_router(orders.router)
 
     return app
+
 
 app = create_app()

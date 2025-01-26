@@ -4,11 +4,13 @@ from fastapi import HTTPException, status
 from app.models import Product
 from app.schemas import ProductCreate
 
+
 def list_products(session: Session):
     """
     Fetch all products from the database.
     """
     return session.exec(select(Product)).all()
+
 
 def create_product(session: Session, product_data: ProductCreate):
     """
@@ -18,12 +20,12 @@ def create_product(session: Session, product_data: ProductCreate):
     if product_data.price <= 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Price cannot be negative or zero."
+            detail="Price cannot be negative or zero.",
         )
     if product_data.stock < 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Stock quantity cannot be negative."
+            detail="Stock quantity cannot be negative.",
         )
 
     # Create the product

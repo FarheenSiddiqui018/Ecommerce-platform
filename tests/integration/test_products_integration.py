@@ -15,7 +15,7 @@ def test_create_product_integration(client):
         "name": "Laptop",
         "description": "High performance laptop",
         "price": 999.99,
-        "stock": 10
+        "stock": 10,
     }
     response = client.post("/products", json=payload)
     assert response.status_code == 201
@@ -40,7 +40,7 @@ def test_create_product_integration_negative_price(client):
         "name": "Negative Price",
         "description": "Invalid data",
         "price": -10.0,
-        "stock": 10
+        "stock": 10,
     }
     response = client.post("/products", json=payload)
     assert response.status_code == 400

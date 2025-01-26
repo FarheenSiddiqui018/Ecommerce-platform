@@ -9,7 +9,7 @@ from sqlalchemy import pool
 from alembic import context
 
 # Add the app directory to the sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from dotenv import load_dotenv
 from app.models import Order, Product  # Import your models
@@ -28,16 +28,15 @@ POSTGRES_DB = os.getenv("POSTGRES_DB", "test_db")
 POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
 POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
 
-DATABASE_URL = (
-    f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
-)
+DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
 
 # Set the sqlalchemy.url option to the DATABASE_URL
 config = context.config
-config.set_main_option('sqlalchemy.url', DATABASE_URL)
+config.set_main_option("sqlalchemy.url", DATABASE_URL)
 
 # Set target_metadata to your SQLModel metadata
 target_metadata = SQLModel.metadata
+
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode."""

@@ -1,5 +1,3 @@
-# Dockerfile
-
 # Use the official Python image as the base
 FROM python:3.13-slim
 
@@ -13,10 +11,8 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    git \
     && rm -rf /var/lib/apt/lists/*
-
-# Install Poetry (optional, if you're using it)
-# RUN pip install poetry
 
 # Copy dependency files
 COPY requirements.txt .
@@ -29,7 +25,6 @@ RUN pip install -r dev-requirements.txt
 
 # Copy the rest of the application code
 COPY . .
-
 
 # Copy entrypoint script
 COPY entrypoint.sh .

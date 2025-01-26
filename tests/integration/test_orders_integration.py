@@ -7,18 +7,14 @@ def test_create_order_integration(client):
         "name": "Test Product",
         "description": "For ordering",
         "price": 20.0,
-        "stock": 2
+        "stock": 2,
     }
     prod_response = client.post("/products", json=product_payload)
     assert prod_response.status_code == 201
     product = prod_response.json()
 
     # 2. Create an order with quantity 1
-    order_payload = {
-        "products": [
-            {"product_id": product["id"], "quantity": 1}
-        ]
-    }
+    order_payload = {"products": [{"product_id": product["id"], "quantity": 1}]}
     order_response = client.post("/orders", json=order_payload)
     assert order_response.status_code == 201
     created_order = order_response.json()
@@ -41,18 +37,14 @@ def test_create_order_insufficient_stock_integration(client):
         "name": "Low Stock Product",
         "description": "Barely enough",
         "price": 50.0,
-        "stock": 1
+        "stock": 1,
     }
     prod_response = client.post("/products", json=product_payload)
     assert prod_response.status_code == 201
     product = prod_response.json()
 
     # Attempt to buy quantity = 2 (more than in stock)
-    order_payload = {
-        "products": [
-            {"product_id": product["id"], "quantity": 2}
-        ]
-    }
+    order_payload = {"products": [{"product_id": product["id"], "quantity": 2}]}
     order_response = client.post("/orders", json=order_payload)
     assert order_response.status_code == 400
     error = order_response.json()
